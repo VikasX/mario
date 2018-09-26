@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Super Mario</title>
+</head>
+  
+<body>
+	<img  id="mush" src="mush.ico" style="width:50px; display: none">
+	<img  id="mario" src="mario.ico" style="width:50px; display: none">
+	<img  id="bg" src="bg.png" style="width:400px; display: none">
+	
+	<h1 style="text-align: center;">Press Arrow key to start</h1>
+  	<p style="text-align: center;"id="score"> </p>
+	
+	<canvas id="gc" style="margin-left: 25%;" width="400" height="350"></canvas>
+
+
+	<script>
+
+		window.onload=function() 
+		{
+			canv=document.getElementById("gc");
+			ctx=canv.getContext("2d");
+
+			document.addEventListener("keydown",keyPush);
+			setInterval(game,1000/10);
+		}
+	
+//player
+	px=py=10;
+	gs=tc=20;
+//food
+	ax=ay=15;
+	xv=yv=0;
+	trail=[];
+	tail = 1;
+	count=10;
+
+
+
+function game(){
+
+	// player movement without continus type effort
+	px+=xv;
+	py+=yv;
+
+	// for x axis
+	if(px<0) {
+		px= tc-1;
+	}
+	if(px>tc-1) {
+		px= 0;
+	}
+
+	// for y axis
+	if(py<0) {
+		py= tc-1;
+	}
+	if(py>tc-1) {
+		py= 0;
+	}
+
+
+	//for background
+	var img3=document.getElementById("bg");
+	ctx.drawImage(img3,0,0,400,350);
+	
+	//for player
+	var img2=document.getElementById("mario");
+	ctx.drawImage(img2,px*gs,py*gs,30,30);
+	trail.push({x:px,y:py});
+	while(trail.length>tail) 
+	{
+		trail.shift();
+	}
+
+	var label = document.getElementById("score");
+	label.innerHTML = "Mushroom remaining is: " + count;  
+
+	//condtion check for mushroom eat
+	if(ax==px && ay==py) 
+	{
+
+		if(count==1)
+		{
+			alert('GAME-OVER');
+			document.location.reload();	
+		}
+		else
+		{
+			count--;
+			ax=Math.floor(Math.random()*(tc-10));
+			ay=Math.floor(Math.random()*(tc-10));	
+		}
+	}
+	 
+
+	// for mushroom
+	 var img=document.getElementById("mush");
+	 ctx.drawImage(img,ax*gs,ay*gs,gs+2,gs+2);
+
+}
+
+
+// key press event
+function keyPush(evt) {
+	switch(evt.keyCode) {
+		case 37:
+			xv=-1;yv=0;
+			break;
+		case 38:
+			xv=0;yv=-1;
+			break;
+		case 39:
+			xv=1;yv=0;
+			break;
+		case 40:
+			xv=0;yv=1;
+			break;
+	}
+}
+</script>
+  
+
+</body>
+</html>
+
